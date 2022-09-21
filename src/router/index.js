@@ -1,11 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CatalogView from '@/views/CatalogView.vue'
-
 const routes = [
   {
     path: '/',
-    name: 'catalog-view',
-    component: CatalogView,
+    name: 'CatalogView',
+    component: () => import('@/views/CatalogView.vue'),
+  },
+  {
+    path: '/product/:id',
+    name: 'ProductLayout',
+    component: () => import('@/views/ProductLayout.vue'),
+    children: [
+      {
+        path: 'about',
+        name: 'AboutProduct',
+        component: () => import('@/views/Product/AboutProduct.vue'),
+      },
+      {
+        path: 'details',
+        name: 'DetailsProduct',
+        component: () => import('@/views/Product/DetailsProduct.vue'),
+      },
+      {
+        path: 'specs',
+        name: 'SpecsProduct',
+        component: () => import('@/views/Product/SpecsProduct.vue'),
+      },
+    ],
+  },
+  {
+    path: '/cart',
+    name: 'CartLayout',
+    component: () => import('@/views/CartLayout.vue'),
   },
 ]
 
