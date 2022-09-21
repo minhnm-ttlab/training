@@ -5,7 +5,7 @@
     >
       <div class="flex space-x-2 lg:space-x-5 mt-4">
         <div v-for="(item, index) in navigation" :key="index">
-          <router-link
+          <!-- <router-link
             :to="{ name: item.name, params: { id: route.params.id } }"
             custom
             v-slot="{ href, navigate, isActive }"
@@ -20,7 +20,17 @@
                 >{{ item.title }}</span
               >
             </a>
-          </router-link>
+          </router-link> -->
+          <span
+            class="text-sm font-sans font-[600] cursor-pointer"
+            :class="{
+              'border-b-2 border-blue-500 text-black':
+                isActiveComponent === item.name,
+              'text-[#666]': isActiveComponent !== item.name,
+            }"
+            @click="isActiveComponent = item.name"
+            >{{ item.title }}</span
+          >
         </div>
       </div>
       <div class="mt-[16px] order-2 select-none">
@@ -60,14 +70,31 @@
       </div>
     </div>
     <div class="border-t-2 mt-4">
-      <router-view />
+      <div class="flex flex-col md:flex-row">
+        <div class="w-full md:w-[60%] bg-[#F5F7FF]">
+          <transition mode="out-in" name="fade">
+            <component :is="activeComponent" />
+          </transition>
+        </div>
+        <div class="w-full md:w-[40%] relative">
+          <image-preview :images="[product1, product2, product3, product4]" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import product1 from '@/assets/images/product-1.png'
+import product2 from '@/assets/images/product-2.png'
+import product3 from '@/assets/images/product-3.png'
+import product4 from '@/assets/images/product-4.png'
 import ArrowDownIcon from '@/assets/icons/arrow-down.svg'
 import ArrowUpIcon from '@/assets/icons/arrow-up.svg'
+import AboutProduct from './Product/AboutProduct'
+import SpecsProduct from './Product/SpecsProduct'
+import DetailsProduct from './Product/DetailsProduct'
+import ImagePreview from '@/components/ImagePreview'
 import { numberWithCommasFormat2 } from '@/utils'
 import { useRouter, useRoute } from 'vue-router'
 import { computed, ref } from 'vue'
@@ -78,31 +105,36 @@ const route = useRoute()
 const store = useStore()
 
 const quantity = ref(1)
-
+const isActiveComponent = ref('AboutProduct')
 const products = computed(() => store.state.products)
-
 const productId = computed(() => route.params.id)
-
 const product = computed(() => {
   return products.value.find((item) => item.id === parseInt(productId.value))
 })
-
 const formatedPrice = computed(() => {
   return numberWithCommasFormat2(product.value.discount * quantity.value)
+})
+
+const activeComponent = computed(() => {
+  return navigation.find((item) => item.name === isActiveComponent.value)
+    .component
 })
 
 const navigation = [
   {
     title: 'About Product',
     name: 'AboutProduct',
+    component: AboutProduct,
   },
   {
     title: 'Details',
     name: 'DetailsProduct',
+    component: DetailsProduct,
   },
   {
     title: 'Specs',
     name: 'SpecsProduct',
+    component: SpecsProduct,
   },
 ]
 

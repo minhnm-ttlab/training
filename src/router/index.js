@@ -9,23 +9,6 @@ const routes = [
     path: '/product/:id',
     name: 'ProductLayout',
     component: () => import('@/views/ProductLayout.vue'),
-    children: [
-      {
-        path: 'about',
-        name: 'AboutProduct',
-        component: () => import('@/views/Product/AboutProduct.vue'),
-      },
-      {
-        path: 'details',
-        name: 'DetailsProduct',
-        component: () => import('@/views/Product/DetailsProduct.vue'),
-      },
-      {
-        path: 'specs',
-        name: 'SpecsProduct',
-        component: () => import('@/views/Product/SpecsProduct.vue'),
-      },
-    ],
   },
   {
     path: '/cart',
